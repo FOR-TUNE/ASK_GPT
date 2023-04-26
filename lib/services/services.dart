@@ -50,7 +50,7 @@ class _APIKeyDialogWidgetState extends State<APIKeyDialogWidget> {
         ),
       ),
       elevation: 2.0,
-      backgroundColor: primaryBackgroundColor.withOpacity(0.85),
+      backgroundColor: primaryBackgroundColor.withOpacity(0.7),
       shadowColor: textFieldColor.withOpacity(0.1),
       child: Padding(
         padding: EdgeInsets.symmetric(
