@@ -46,11 +46,11 @@ class _ChatInputFieldState extends State<ChatInputField> {
         Future<void> sendMessage() async {
           if (_controller.text.isEmpty) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: TextWidget(
+              SnackBar(
+                content: const TextWidget(
                   msg: "Please type a message",
                 ),
-                backgroundColor: Colors.red,
+                backgroundColor: secondaryColor.withOpacity(0.7),
               ),
             );
             return;
