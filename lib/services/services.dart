@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'package:ask_gpt/constants/sizeConfig.dart';
 import 'package:ask_gpt/constants/styles.dart';
+import 'package:ask_gpt/screens/chatScreen/widgets/textWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -128,58 +129,63 @@ class _APIKeyDialogWidgetState extends State<APIKeyDialogWidget> {
                 shape: const StadiumBorder(),
               ),
               onPressed: () async {
-                setState(
-                  () {
-                    apiKey = pasteController.text;
-                    Timer(
-                      const Duration(seconds: 2),
-                      () => Navigator.of(context).pop(),
-                    );
-                  },
-                );
                 SharedPreferences prefs = await SharedPreferences.getInstance();
-                prefs.setString('ApiKey', apiKey);
-                apiKey.log();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    backgroundColor: Colors.transparent,
-                    behavior: SnackBarBehavior.floating,
-                    elevation: 0,
-                    duration: const Duration(seconds: 2),
-                    content: Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: screenAwareSize(10, context, width: true),
-                        vertical: screenAwareSize(10, context),
+                prefs.setString('ApiKey', pasteController.text);
+                if (pasteController.text.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: const TextWidget(
+                        msg: "Please key in your API Key.",
                       ),
-                      child: Stack(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 10),
-                            height: screenAwareSize(120, context),
-                            decoration: BoxDecoration(
-                              color: secondaryColor.withOpacity(0.7),
-                              borderRadius: BorderRadius.circular(20.0),
+                      backgroundColor: secondaryColor.withOpacity(0.7),
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      backgroundColor: Colors.transparent,
+                      behavior: SnackBarBehavior.floating,
+                      elevation: 0,
+                      duration: const Duration(seconds: 2),
+                      content: Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: screenAwareSize(10, context, width: true),
+                          vertical: screenAwareSize(10, context),
+                        ),
+                        child: Stack(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 10),
+                              height: screenAwareSize(120, context),
+                              decoration: BoxDecoration(
+                                color: secondaryColor.withOpacity(0.7),
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('Success', style: kNormalText),
+                                  addVerticalSp(5),
+                                  Text(
+                                    'Your OpenAI API key has been saved successfully. You wont need to enter it again in the future...',
+                                    style: kNormalText.copyWith(),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              ),
                             ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text('Success', style: kNormalText),
-                                addVerticalSp(5),
-                                Text(
-                                  'Your OpenAI API key has been saved successfully. You wont need to enter it again in the future...',
-                                  style: kNormalText.copyWith(),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                );
+                  );
+                  Timer(
+                    const Duration(seconds: 3),
+                    () => Navigator.of(context).pop(),
+                  );
+                }
               },
               child: Text(
                 'Save',
